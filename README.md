@@ -1,4 +1,4 @@
-python-plummer
-==============
+nbi: Initial Conditions for N-body Systems
+===========================================
 
-Plummer model generator
+
