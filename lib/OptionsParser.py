@@ -42,14 +42,14 @@ class OptionsParser:
                                  dest     = "ulim",
                                  type     = float,
                                  help     = ulim_help,
-                                 required = True)
+                                 required = False)
 
         llim_help = "Inner radius for disc distribution [pc]"
         self.parser.add_argument("-l",
                                  dest     = "llim",
                                  type     = float,
                                  help     = llim_help,
-                                 required = True)
+                                 required = False)
 
         mbh_help = "SMBH mass [Msun]"
         self.parser.add_argument("-mbh",
@@ -65,7 +65,14 @@ class OptionsParser:
                                  dest     = "beta",
                                  type     = float,
                                  help     = beta_help,
-                                 required = True)
+                                 required = False)
+
+        eta_help = "Eta parameter for eta model, disc = 2"
+        self.parser.add_argument("-eta",
+                                 dest     = "eta",
+                                 type     = float,
+                                 help     = eta_help,
+                                 required = False)
 
         disc_help = "0: disc,\
                      1: spherical isotropic,\
