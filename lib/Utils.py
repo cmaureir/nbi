@@ -1,3 +1,16 @@
+def spherical(r):
+
+    vector = np.array([0.0, 0.0, 0.0])
+    theta = np.arccos(random.uniform(-1, 1))
+    phi = random.uniform(0, 2*np.pi)
+
+    vector[0] = r * np.sin( theta ) * np.cos( phi )
+    vector[1] = r * np.sin( theta ) * np.sin( phi )
+    vector[2] = r * np.cos( theta )
+
+    return vector
+
+
 def get_energy(pos, vel, mass, N):
 
     # Total Potential and Kinetic Energy
@@ -23,15 +36,15 @@ def get_energy(pos, vel, mass, N):
         epot += 0.5 * t_epot
         ekin += t_ekin
 
-    print("Epot:", self.epot)
-    print("Ekin:", self.ekin)
-    print("Etotal:", self.epot + self.ekin)
+    print("Epot:", epot)
+    print("Ekin:", ekin)
+    print("Etotal:", epot + ekin)
 
 def adjust_center_of_mass(pos, vel, mass, N):
     vel_com = np.zeros(3)
     pos_com = np.zeros(3)
 
-    for i in range(self.N):
+    for i in range(N):
         pos_com[0] += pos[i][0] * mass[i]
         pos_com[1] += pos[i][1] * mass[i]
         pos_com[2] += pos[i][2] * mass[i]
@@ -40,7 +53,7 @@ def adjust_center_of_mass(pos, vel, mass, N):
         vel_com[1] += vel[i][1] * mass[i]
         vel_com[2] += vel[i][2] * mass[i]
 
-    for i in range(self.N):
+    for i in range(N):
         pos[i][0] -= pos_com[0]
         pos[i][1] -= pos_com[1]
         pos[i][2] -= pos_com[2]
@@ -54,7 +67,7 @@ def adjust_units(pos, vel, N, ekin, epot):
     alpha = -epot / 0.5
     beta  =  ekin / 0.25
 
-    for i in range(self.N):
+    for i in range(N):
         pos[i] *= alpha
         vel[i] /= np.sqrt(beta)
 

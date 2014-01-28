@@ -26,19 +26,6 @@ class PlummerSphere:
         self.cummulative_mass_min = 0
         self.cummulative_mass_max = 1.0/self.N
 
-    def spherical(self, r):
-
-        vector = np.array([0.0, 0.0, 0.0])
-        theta = np.arccos(random.uniform(-1, 1))
-        phi = random.uniform(0, 2*np.pi)
-
-        vector[0] = r * np.sin( theta ) * np.cos( phi )
-        vector[1] = r * np.sin( theta ) * np.sin( phi )
-        vector[2] = r * np.cos( theta )
-
-        return vector
-
-
     def create_model(self):
         for i in range(self.N):
             m = self.M/self.N
