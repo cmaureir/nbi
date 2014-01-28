@@ -1,3 +1,6 @@
+import numpy as np
+import random
+
 def spherical(r):
 
     vector = np.array([0.0, 0.0, 0.0])
@@ -36,9 +39,7 @@ def get_energy(pos, vel, mass, N):
         epot += 0.5 * t_epot
         ekin += t_ekin
 
-    print("Epot:", epot)
-    print("Ekin:", ekin)
-    print("Etotal:", epot + ekin)
+    return epot, ekin
 
 def adjust_center_of_mass(pos, vel, mass, N):
     vel_com = np.zeros(3)
