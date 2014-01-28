@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-import random
-import numpy as np
-
+from Utils import *
 
 class PlummerSphere:
     def __init__(self):
@@ -35,7 +33,7 @@ class PlummerSphere:
 
             radius = 1 / np.sqrt(self.cummulative_mass ** (-2.0/3.0) - 1.0)
 
-            r = self.spherical(radius)/self.scale_factor
+            r = spherical(radius)/self.scale_factor
 
             x = 0.0
             y = 0.1
@@ -45,7 +43,7 @@ class PlummerSphere:
 
             velocity = x * np.sqrt(2.0) * ( 1.0 + radius * radius)**(-0.25)
 
-            v = self.spherical(velocity) * np.sqrt(self.scale_factor)
+            v = spherical(velocity) * np.sqrt(self.scale_factor)
 
             #print m, r[0], r[1], r[2], v[0], v[1], v[2]
             self.mass.append(m)
@@ -53,16 +51,16 @@ class PlummerSphere:
             self.vel.append(v)
 
 
-
-
-
 if __name__ == "__main__":
     p = PlummerSphere()
     p.create_model()
-    p.get_energy(p.pos, p.vel,p.mass)
-    p.adjust_center_of_mass()
+    epot, ekin = get_energy(p.pos, p.vel, p.mass, p.N)
+    adjust_center_of_mass(p.pos, p.vel, p.mass, p.N)
+    print("Epot:", epot)
+    print("Ekin:", ekin)
+    print("Etotal:", epot + ekin)
     print "--------------"
-    p.get_energy(p.pos, p.vel,p.mass)
-    p.adjust_units()
+    epot, ekin = get_energy(p.pos, p.vel, p.mass, p.N)
+    adjust_units(p.pos, p.vel, p.N, ekin, epot)
     print "--------------"
-    p.get_energy(p.pos, p.vel,p.mass)
+    epot, ekin = get_energy(p.pos, p.vel, p.mass, p.N)
