@@ -3,7 +3,7 @@
 from Utils import *
 
 class PlummerSphere:
-    def __init__(self):
+    def __init__(self, op):
 
         self.mass = []
         self.pos = []
@@ -45,22 +45,9 @@ class PlummerSphere:
 
             v = spherical(velocity) * np.sqrt(self.scale_factor)
 
-            #print m, r[0], r[1], r[2], v[0], v[1], v[2]
             self.mass.append(m)
             self.pos.append(r)
             self.vel.append(v)
 
-
-if __name__ == "__main__":
-    p = PlummerSphere()
-    p.create_model()
-    epot, ekin = get_energy(p.pos, p.vel, p.mass, p.N)
-    adjust_center_of_mass(p.pos, p.vel, p.mass, p.N)
-    print("Epot:", epot)
-    print("Ekin:", ekin)
-    print("Etotal:", epot + ekin)
-    print "--------------"
-    epot, ekin = get_energy(p.pos, p.vel, p.mass, p.N)
-    adjust_units(p.pos, p.vel, p.N, ekin, epot)
-    print "--------------"
-    epot, ekin = get_energy(p.pos, p.vel, p.mass, p.N)
+        adjust_center_of_mass(p.pos, p.vel, p.mass, p.N)
+        adjust_units(p.pos, p.vel, p.N, ekin, epot)
