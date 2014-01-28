@@ -18,7 +18,25 @@ class OptionsParser:
                                  help    =  out_help,
                                  default = "disc.dat")
 
+        nmp_help = "Number of stars"
+        self.parser.add_argument("-n",
+                                 dest     = "nmp",
+                                 type     = int,
+                                 help     = nmp_help,
+                                 required = True)
 
+        profile_help = "Print the density profile to this file"
+        self.parser.add_argument("--profile",
+                                 dest    = "profile",
+                                 help    = profile_help,
+                                 default = None)
+
+        plot_help = "plot histogram of density"
+        self.parser.add_argument("--plot",
+                                 dest   = "plot",
+                                 help   = plot_help,
+                                 action = "store_true")
+##########################
         ulim_help = "Outer radius for disc distribution [pc]"
         self.parser.add_argument("-u",
                                  dest     = "ulim",
@@ -31,13 +49,6 @@ class OptionsParser:
                                  dest     = "llim",
                                  type     = float,
                                  help     = llim_help,
-                                 required = True)
-
-        nmp_help = "Number of stars"
-        self.parser.add_argument("-n",
-                                 dest     = "nmp",
-                                 type     = int,
-                                 help     = nmp_help,
                                  required = True)
 
         mbh_help = "SMBH mass [Msun]"
@@ -81,17 +92,6 @@ class OptionsParser:
                                  default  = 1.0,
                                  required = False)
 
-        profile_help = "Print the density profile to this file"
-        self.parser.add_argument("--profile",
-                                 dest    = "profile",
-                                 help    = profile_help,
-                                 default = None)
-
-        plot_help = "plot histogram of density"
-        self.parser.add_argument("--plot",
-                                 dest   = "plot",
-                                 help   = plot_help,
-                                 action = "store_true")
     def process_args(self):
         # Do something with self.parser
         pass
