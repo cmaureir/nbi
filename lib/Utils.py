@@ -1,35 +1,55 @@
 import numpy as np
 import random
+import logging
 
 
 def print_model(pos, vel, mass, outfile):
 
-    ofile = open(outfile,'w')
-    #outstring = '{0:10e} {1:10e} {2:10e} {3:10e} \
-    #             {4:10e} {5:10e} {6:10e}\n'.format(mbh,0.0,0.0,0.0,0.0,0.0,0.0)
-    #ofile.write(outstring)
+    # Openning file
+    try:
+        ofile = open(outfile,'w')
+    except IOError as e:
+        msg = "IO Error({0}): {1}".format(e.errno, e.strerror)
+        logging.warning(msg)
+    except:
+        print "Unexpected error:", sys.exc_info()[0]
+        raise
 
+    # Preparing every line to print to the file
     for i in range(len(pos)):
-        outstring = '{0:10e}\t{1:10e}\t{2:10e}\t{3:10e}\t{4:10e}\t{5:10e}\t{6:10e}\n'.format(float(mass[i]),\
-                                                       float(pos[i][0]),\
-                                                       float(pos[i][1]),\
-                                                       float(pos[i][2]),\
-                                                       float(vel[i][0]),\
-                                                       float(vel[i][1]),\
-                                                       float(vel[i][2]))
+        # Formatting particle attributes
+        m  = '% 3.8e' % mass[i]
+        rx = '% 3.8e' % pos[i][0]
+        ry = '% 3.8e' % pos[i][1]
+        rz = '% 3.8e' % pos[i][2]
+        vx = '% 3.8e' % vel[i][0]
+        vy = '% 3.8e' % vel[i][1]
+        vz = '% 3.8e' % vel[i][2]
+
+        # Right-align the strings
+        outstring = "{0} {1} {2} {3} {4} {5} {6}\n".format( m.rjust(12),\
+                                                           rx.rjust(12),\
+                                                           ry.rjust(12),\
+                                                           rz.rjust(12),\
+                                                           vx.rjust(12),\
+                                                           vy.rjust(12),\
+                                                           vz.rjust(12))
+        # Write to file
         ofile.write(outstring)
 
+    # Closing the file
     ofile.close()
 
 def spherical(r):
+    """Generating 3d coordinates based on spherical coordinates"""
+    vector = np.zeros(3)
 
-    vector = np.array([0.0, 0.0, 0.0])
     theta = np.arccos(random.uniform(-1, 1))
-    phi = random.uniform(0, 2*np.pi)
+    phi   = random.uniform(0, 2 * np.pi)
 
-    vector[0] = r * np.sin( theta ) * np.cos( phi )
-    vector[1] = r * np.sin( theta ) * np.sin( phi )
-    vector[2] = r * np.cos( theta )
+    vector[0] = r * np.sin(theta) * np.cos(phi)
+    vector[1] = r * np.sin(theta) * np.sin(phi)
+    vector[2] = r * np.cos(theta)
 
     return vector
 
@@ -47,14 +67,13 @@ def get_energy(pos, vel, mass, N):
     for i in range(N):
         t_epot = 0
         for j in range(N):
-            if i != j:
-                rx = pos[j][0] - pos[i][0]
-                ry = pos[j][1] - pos[i][1]
-                rz = pos[j][2] - pos[i][2]
-                rinv = 1 / np.sqrt(rx*rx + ry*ry + rz*rz)
 
+            if i != j:
+                r       = pos[j] - pos[i]
+                rinv    = 1 / np.linalg.norm(r)
                 t_epot -= (mass[i] * mass[j]) * rinv
-        t_ekin = 0.5 * mass[i] * (vel[i][0]**2 + vel[i][1]**2 + vel[i][2]**2)
+
+        t_ekin = 0.5 * mass[i] * np.dot(vel[i], vel[i])
 
         epot += 0.5 * t_epot
         ekin += t_ekin
@@ -66,23 +85,11 @@ def adjust_center_of_mass(pos, vel, mass, N):
     pos_com = np.zeros(3)
 
     for i in range(N):
-        pos_com[0] += pos[i][0] * mass[i]
-        pos_com[1] += pos[i][1] * mass[i]
-        pos_com[2] += pos[i][2] * mass[i]
+        pos_com += pos[i] * mass[i]
+        vel_com += vel[i] * mass[i]
 
-        vel_com[0] += vel[i][0] * mass[i]
-        vel_com[1] += vel[i][1] * mass[i]
-        vel_com[2] += vel[i][2] * mass[i]
-
-    for i in range(N):
-        pos[i][0] -= pos_com[0]
-        pos[i][1] -= pos_com[1]
-        pos[i][2] -= pos_com[2]
-
-        vel[i][0] -= vel_com[0]
-        vel[i][1] -= vel_com[1]
-        vel[i][2] -= vel_com[2]
-
+    pos -= pos_com
+    vel -= vel_com
 
 def adjust_units(pos, vel, N, ekin, epot):
     alpha = -epot / 0.5
@@ -93,7 +100,7 @@ def adjust_units(pos, vel, N, ekin, epot):
         vel[i] /= np.sqrt(beta)
 
 def confirm_orbits(nmp,mps,mu):
-    eccs = np.zeros(nmp)
+    eccs  = np.zeros(nmp)
     semis = np.zeros(nmp)
     for i in range(nmp):
         mp = mps[i]
