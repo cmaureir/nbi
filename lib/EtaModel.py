@@ -11,6 +11,11 @@ import random
 import matplotlib.pyplot as plt
 
 class EtaModel(Model):
+    def __init__(self, op):
+        Model.__init__(self,op.n)
+
+        self.mbh  = op.mbh
+        self.eta = op.eta
 
     def distribution_function(self,r):
         return self.eta/(4.0*np.pi)/(np.power(r,3.0-self.eta) * np.power((1.0+r),self.eta-1.0))
@@ -18,10 +23,10 @@ class EtaModel(Model):
     def create_model(self):
         #draw semi-major axes from a power law distribution
         #the numpy.random.power uses \propto a*x^(a-1)
-        mbh = self.op.mbh
+        mbh = self.mbh
         #total mass in stars should be unity
         mmp = 1.0/(self.N) #Equal mass stars
-        self.eta = self.op.eta
+        self.eta = self.eta
         self.rtemp = np.arange(0.01,1.0,0.001)
         self.p = self.distribution_function(self.rtemp)
         dist = GeneralRandom(x=self.rtemp,p=self.p)
@@ -34,7 +39,7 @@ class EtaModel(Model):
 #        ax.legend()
 #        plt.show()
 #
-        
+
         self.radii = dist.random(self.N)[0]
         #now I have the radii, obtain vel dispersions for each radius
         self.veldisp = np.power(self.radii,3.0-self.eta)*np.power((1.0+self.radii),1.0+self.eta)\
@@ -48,7 +53,7 @@ class EtaModel(Model):
         for i in range(self.N):
             self.vel[i] = np.random.normal(0.0,self.veldisp[i],size=3)
             self.pos[i] = spherical(self.radii[i])
-            self.m[i] = mmp
+            self.mass[i] = mmp
 
         return
 
