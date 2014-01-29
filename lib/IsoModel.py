@@ -58,12 +58,13 @@ class IsoModel(Model):
     def create_model(self):
         #draw semi-major axes from a power law distribution
         #the numpy.random.power uses \propto a*x^(a-1)
-        eccs = np.random.power(self.gamma+1.0,self.N)
+        self.Nstar = self.N - 1
+        eccs = np.random.power(self.gamma+1.0,self.Nstar)
 
-        radii_temp = np.random.power(2.0-self.delta,self.N)
+        radii_temp = np.random.power(2.0-self.delta,self.Nstar)
         radii      = np.sort(radii_temp)
 
-        for i in range(self.N):
+        for i in range(self.Nstar):
             b = radii[i] * np.sqrt(np.fabs(1 - eccs[i]**2)) * PC_in_m
             #obtain a random 3D direction for a vector
             phi = random.random()*2.0*np.pi
@@ -87,8 +88,12 @@ class IsoModel(Model):
 
             m, r, v = self.get_pos_vel(a_vec, b_vec, m_anomaly, eccs[i], self.mbh*Msun)
             #this will write everything in PC, velocity in pc per year and mass in Msun, bhint units
-            self.mass[i] = self.mmp
-            self.pos[i] = r/PC_in_m
-            self.vel[i] = v[0]/9.78e8
+            self.mass[i+1] = self.mmp
+            self.pos[i+1] = r/PC_in_m
+            self.vel[i+1] = v[0]/9.78e8
+        #put the MBH in the first place
+        self.mass[0] = mbh
+        self.pos[0] = np.zeros(3)
+        self.vel[0] = np.zeros(3)
 
         return
