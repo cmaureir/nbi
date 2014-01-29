@@ -46,12 +46,12 @@ class OptionsParser:
                                  help     = n_help,
                                  required = True)
 
-        #out_help = "Name of output ascii file"
-        #self.general_group.add_argument("-o",
-        #                         metavar = "outfile",
-        #                         dest    = "outfile",
-        #                         help    =  out_help,
-        #                         default = "disc.dat")
+        out_help = "Name of output ascii file"
+        self.general_group.add_argument("-o",
+                                 metavar = "outfile",
+                                 dest    = "outfile",
+                                 help    =  out_help,
+                                 default = "nbi_output.dat")
 
         #profile_help = "Print the density profile to this file"
         #self.disc_group.add_argument("--profile",
@@ -117,10 +117,18 @@ class OptionsParser:
         gamma_help =  textwrap.dedent("""\
                       Power law index gamma of eccentricity distribution,
                       default = 1.0 (thermalized)""")
-        self.disc_group.add_argument("-e",
+        self.iso_group.add_argument("-e",
                                  dest     = "gamma",
                                  type     = float,
                                  help     = gamma_help,
+                                 default  = 1.0,
+                                 required = False)
+
+        delta_help =  "3D density power law index"
+        self.iso_group.add_argument("-d",
+                                 dest     = "delta",
+                                 type     = float,
+                                 help     = delta_help,
                                  default  = 1.0,
                                  required = False)
 

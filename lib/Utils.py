@@ -5,18 +5,18 @@ import random
 def print_model(pos, vel, mass, outfile):
 
     ofile = open(outfile,'w')
-    outstring = '{0:10e} {1:10e} {2:10e} {3:10e} \
-                 {4:10e} {5:10e} {6:10e}\n'.format(mps.mbh,0.0,0.0,0.0,0.0,0.0,0.0)
-    ofile.write(outstring)
+    #outstring = '{0:10e} {1:10e} {2:10e} {3:10e} \
+    #             {4:10e} {5:10e} {6:10e}\n'.format(mbh,0.0,0.0,0.0,0.0,0.0,0.0)
+    #ofile.write(outstring)
 
-    for i in range(mps.N):
-        outstring = '{0:10e}\t{1:10e}\t{2:10e}\t{3:10e}\t{4:10e}\t{5:10e}\t{6:10e}\n'.format(float(mps.m[i]),\
-                                                       float(mps.pos[i][0]),\
-                                                       float(mps.pos[i][1]),\
-                                                       float(mps.pos[i][2]),\
-                                                       float(mps.vel[i][0]),\
-                                                       float(mps.vel[i][1]),\
-                                                       float(mps.vel[i][2]))
+    for i in range(len(pos)):
+        outstring = '{0:10e}\t{1:10e}\t{2:10e}\t{3:10e}\t{4:10e}\t{5:10e}\t{6:10e}\n'.format(float(mass[i]),\
+                                                       float(pos[i][0]),\
+                                                       float(pos[i][1]),\
+                                                       float(pos[i][2]),\
+                                                       float(vel[i][0]),\
+                                                       float(vel[i][1]),\
+                                                       float(vel[i][2]))
         ofile.write(outstring)
 
     ofile.close()

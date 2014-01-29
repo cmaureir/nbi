@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-import numpy as np
+from lib.constants import *
+from lib.Utils import *
+import random
 
 class Model():
     def __init__(self, n):

@@ -31,7 +31,7 @@ def main():
 
     mps.create_model()
 
-    #print_model(mps.pos, mps.vel, mps.mass)
+    print_model(mps.pos, mps.vel, mps.mass, op.outfile)
 
 if __name__ == "__main__":
     main()

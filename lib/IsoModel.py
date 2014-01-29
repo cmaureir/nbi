@@ -1,12 +1,14 @@
 #!/usr/bin/python
 
-from lib.constants import *
 from lib.Model import *
 
-import numpy as np
-import random
-
 class IsoModel(Model):
+    def __init__(self, op):
+        Model.__init__(self,op.n)
+
+        self.gamma = op.gamma
+        self.delta = op.delta
+
 
     def get_pos_vel(self, a, b, m_anom, e, m):
 
@@ -51,12 +53,12 @@ class IsoModel(Model):
 
         return mass, r, v
 
-    def create_model(self):#radii,eccs,rmin,rmax,beta,nmp,mmp,mbh):
+    def create_model(self):
         #draw semi-major axes from a power law distribution
         #the numpy.random.power uses \propto a*x^(a-1)
-        eccs = np.random.power(self.op.gamma+1.0,self.N)
+        eccs = np.random.power(self.gamma+1.0,self.N)
 
-        radii_temp = np.random.power(2.0-self.op.beta,self.N)
+        radii_temp = np.random.power(2.0-self.op.delta,self.N)
         radii      = np.sort(radii_temp)
 
         for i in range(self.N):
@@ -86,5 +88,5 @@ class IsoModel(Model):
             self.m[i] = self.op.mmp
             self.pos[i] = r/PC_in_m
             self.vel[i] = v[0]/9.78e8
-            
+
         return

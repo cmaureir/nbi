@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
-from lib.constants import *
 from lib.Model import *
 
-import random
 import matplotlib.pyplot as plt
 
 class DiscModel(Model):
