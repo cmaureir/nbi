@@ -4,41 +4,38 @@ import textwrap
 class OptionsParser:
     def __init__(self):
 
-        self.parser  = None
+        # Parser
         desc = "N-body Initial conditions generator"
-        #desc = "Create a circular, plane, stellar disc"
-        #self.parser = argparse.ArgumentParser(description=desc)
         self.parser = argparse.ArgumentParser(description=desc,
                                               formatter_class=argparse.RawTextHelpFormatter)
+        subparsers = self.parser.add_subparsers(dest="command")
 
+        # General options for all the models
         self.general_group = self.parser.add_argument_group("General options")
         self.add_general_arguments()
 
-        self.disc_group = self.parser.add_argument_group("Disc model")
+        # Disc Parser
+        self.disc_parser = subparsers.add_parser("disc",
+                                                 help="Disc Model")
         self.add_disc_arguments()
 
-        self.iso_group = self.parser.add_argument_group("Spherical Isotropic model")
+        # Iso Parser
+        self.iso_parser = subparsers.add_parser("iso",
+                                                help="Spherical Isotropic model")
         self.add_iso_arguments()
 
-        self.eta_group = self.parser.add_argument_group("ETA model")
+        # Eta parser
+        self.eta_parser = subparsers.add_parser("eta",
+                                                help="ETA Model")
         self.add_eta_arguments()
 
-        self.plummer_group = self.parser.add_argument_group("Plummer model")
+        # Plummer parser
+        self.plummer_parser = subparsers.add_parser("plummer",
+                                                    help="Plummer Model")
         self.add_plummer_arguments()
 
-    def add_general_arguments(self):
-        model_help =  textwrap.dedent("""\
-                       0: Disc,
-                       1: Spherical Isotropic,
-                       2: Eta model,
-                       3: Plummer Model""")
-        self.general_group.add_argument("-t",
-                                 dest    = "type",
-                                 type    = int,
-                                 help    = model_help,
-                                 default = 0,
-                                 required = True)
 
+    def add_general_arguments(self):
         n_help = "Number of stars"
         self.general_group.add_argument("-n",
                                  dest     = "n",
@@ -54,13 +51,13 @@ class OptionsParser:
                                  default = "nbi_output.dat")
 
         #profile_help = "Print the density profile to this file"
-        #self.disc_group.add_argument("--profile",
+        #self.disc_parser.add_argument("--profile",
         #                         dest    = "profile",
         #                         help    = profile_help,
         #                         default = None)
 
         #plot_help = "plot histogram of density"
-        #self.disc_group.add_argument("--plot",
+        #self.disc_parser.add_argument("--plot",
         #                         dest   = "plot",
         #                         help   = plot_help,
         #                         action = "store_true")
@@ -68,69 +65,89 @@ class OptionsParser:
     def add_disc_arguments(self):
 
         ulim_help = "Outer radius for disc distribution [pc]"
-        self.disc_group.add_argument("-u",
+        self.disc_parser.add_argument("-u",
                                  dest     = "ulim",
                                  type     = float,
                                  help     = ulim_help,
-                                 required = False)
+                                 required = True)
 
         llim_help = "Inner radius for disc distribution [pc]"
-        self.disc_group.add_argument("-l",
+        self.disc_parser.add_argument("-l",
                                  dest     = "llim",
                                  type     = float,
                                  help     = llim_help,
-                                 required = False)
+                                 required = True)
 
         mbh_help = "SMBH mass [Msun]"
-        self.disc_group.add_argument("-mbh",
+        self.disc_parser.add_argument("-mbh",
                                  dest     = "mbh",
                                  type     = float,
                                  help     = mbh_help,
-                                 required = False)
+                                 required = True)
 
 
         beta_help =  textwrap.dedent("""\
                      Surface density exponent, Sigma propto r^(-beta)""")
-        self.disc_group.add_argument("-b",
+        self.disc_parser.add_argument("-b",
                                  dest     = "beta",
                                  type     = float,
                                  help     = beta_help,
-                                 required = False)
+                                 required = True)
 
         mmp_help = "Mass of stars [Msun]"
-        self.disc_group.add_argument("-m",
+        self.disc_parser.add_argument("-m",
                                  dest     = "mmp",
                                  type     = float,
                                  help     = mmp_help,
-                                 required = False)
+                                 required = True)
 
 
     def add_eta_arguments(self):
         eta_help = "Eta parameter for eta model"
-        self.eta_group.add_argument("-eta",
+        self.eta_parser.add_argument("-eta",
                                  dest     = "eta",
                                  type     = float,
                                  help     = eta_help,
-                                 required = False)
+                                 required = True)
+
+        mbh_help = "SMBH mass [Msun]"
+        self.eta_parser.add_argument("-mbh",
+                                 dest     = "mbh",
+                                 type     = float,
+                                 help     = mbh_help,
+                                 required = True)
 
     def add_iso_arguments(self):
         gamma_help =  textwrap.dedent("""\
                       Power law index gamma of eccentricity distribution,
                       default = 1.0 (thermalized)""")
-        self.iso_group.add_argument("-e",
+        self.iso_parser.add_argument("-e",
                                  dest     = "gamma",
                                  type     = float,
                                  help     = gamma_help,
-                                 default  = 1.0,
-                                 required = False)
+                                 required = True)
 
         delta_help =  "3D density power law index"
-        self.iso_group.add_argument("-d",
+        self.iso_parser.add_argument("-d",
                                  dest     = "delta",
                                  type     = float,
                                  help     = delta_help,
-                                 default  = 1.0,
-                                 required = False)
+                                 required = True)
+
+        mbh_help = "SMBH mass [Msun]"
+        self.iso_parser.add_argument("-mbh",
+                                 dest     = "mbh",
+                                 type     = float,
+                                 help     = mbh_help,
+                                 required = True)
+
+        mmp_help = "Mass of stars [Msun]"
+        self.iso_parser.add_argument("-m",
+                                 dest     = "mmp",
+                                 type     = float,
+                                 help     = mmp_help,
+                                 required = True)
+
 
     def add_plummer_arguments(self):
         pass

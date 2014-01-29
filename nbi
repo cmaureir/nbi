@@ -20,13 +20,13 @@ def main():
     op = OptionsParser()
     op = op.get_args()
 
-    if op.type == 0:
+    if op.command == "disc":
         mps = DiscModel(op)
-    elif op.type == 1:
+    elif op.command == "iso":
         mps = IsoModel(op)
-    elif op.type == 2:
+    elif op.command == "eta":
         mps = EtaModel(op)
-    elif op.type == 3:
+    elif op.command == "plummer":
         mps = PlummerModel(op)
 
     mps.create_model()
