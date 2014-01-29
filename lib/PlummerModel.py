@@ -31,8 +31,8 @@ class PlummerModel:
         self.scale_factor = 16.0/(3.0 * np.pi)
 
         # Cummulative mass range to generate the radius of the particles
-        self.cumm_mass_min = 0
-        self.cumm_mass_max = 1.0/self.N
+        self.cmass_min = 0
+        self.cmass_max = 1.0/self.N
 
     # Function to generate the plummer sphere
     def create_model(self):
@@ -44,13 +44,13 @@ class PlummerModel:
 
             # Random number between the cummulative mass range to generate
             # the radius
-            self.cumm_mass = random.uniform(self.cumm_mass_min, self.cumm_mass_max)
-            self.cumm_mass_min = self.cumm_mass_max
-            self.cumm_mass_max += m
+            self.cmass      = random.uniform(self.cmass_min, self.cmass_max)
+            self.cmass_min  = self.cmass_max
+            self.cmass_max += m
 
             # Radius constant to consider at the moment of transformation to
             # spherical coordinates
-            radius = 1 / np.sqrt(self.cumm_mass ** (-2.0/3.0) - 1.0)
+            radius = 1 / np.sqrt(self.cmass ** (-2.0/3.0) - 1.0)
 
             # Random position of the particle, scaled for the Rv = 1
             r = spherical(radius)/self.scale_factor
