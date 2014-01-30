@@ -1,12 +1,6 @@
 #!/usr/bin/python
 
-from lib.constants import *
 from lib.Model import *
-from lib.GeneralRandom import *
-from lib.Utils import *
-
-import numpy as np
-import random
 
 import matplotlib.pyplot as plt
 

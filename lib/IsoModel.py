@@ -11,7 +11,6 @@ class IsoModel(Model):
         self.mbh  = op.mbh
         self.mmp  = op.mmp
 
-
     def get_pos_vel(self, a, b, m_anom, e, m):
 
         # Getting data
@@ -66,29 +65,19 @@ class IsoModel(Model):
         for i in range(self.N):
             b = radii[i] * np.sqrt(np.fabs(1 - eccs[i]**2)) * PC_in_m
             #obtain a random 3D direction for a vector
-            phi = random.random()*2.0*np.pi
-            theta = random.random()*np.pi
-            a_vec = np.zeros(3)
-            b_vec = np.zeros(3)
-            a_vec[0] = radii[i] * np.sin(theta) * np.cos(phi) * PC_in_m
-            a_vec[1] = radii[i] * np.sin(theta) * np.sin(phi) * PC_in_m
-            a_vec[2] = radii[i] * np.cos(theta) * PC_in_m
+            a_vec = spherical(radii[i]) * PC_in_m
             #now construct a vector perpendicular to a_vec
-            phi = random.random()*2.0*np.pi
-            theta = random.random()*np.pi
-            b_vec[0] = np.sin(theta) * np.cos(phi)
-            b_vec[1] = np.sin(theta) * np.sin(phi)
-            b_vec[2] = np.cos(theta) #this is now a random unit vector, right?
+            b_vec = spherical(1)
             #orthogonalize it to a_vec
-            b_vec = b_vec - a_vec * np.dot(b_vec,a_vec) / np.dot(a_vec,a_vec)
-            b_vec = b_vec/np.linalg.norm(b_vec)
-            b_vec = b_vec*b
+            b_vec -= a_vec * np.dot(b_vec,a_vec) / np.dot(a_vec,a_vec)
+            b_vec /= np.linalg.norm(b_vec)
+            b_vec *= b
             m_anomaly = random.random()*2.0*np.pi
 
             m, r, v = self.get_pos_vel(a_vec, b_vec, m_anomaly, eccs[i], self.mbh*Msun)
             #this will write everything in PC, velocity in pc per year and mass in Msun, bhint units
             self.mass[i] = self.mmp
-            self.pos[i] = r/PC_in_m
-            self.vel[i] = v[0]/9.78e8
+            self.pos[i]  = r/PC_in_m
+            self.vel[i]  = v[0]/9.78e8
 
         return
