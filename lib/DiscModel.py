@@ -27,10 +27,11 @@ class DiscModel(Model):
         random.seed(13223)
         # I will use the bhint format for each star
         # m x y z vx vy vz
-        radii_temp = np.random.power(2.0 - self.beta, self.N)
+        self.Nstar = self.N-1
+        radii_temp = np.random.power(2.0-self.beta,self.Nstar)
         radii      = np.sort(radii_temp)
 
-        for i in range(self.N):
+        for i in range(self.Nstar):
             phi = random.random() * 2.0 * np.pi
             r   = radii[i] * (self.ulim - self.llim) + self.llim
 
@@ -45,6 +46,11 @@ class DiscModel(Model):
             vx = -v * np.sin(phi)/9.78e5 #to convert to pc per yr
             vy =  v * np.cos(phi)/9.78e5
 
-            self.mass[i] = self.mmp
-            self.pos[i]  = np.array([rx,ry,0.0])
-            self.vel[i]  = np.array([vx,vy,0.0])
+            self.mass[i+1] = self.mmp
+            self.pos[i+1]  = np.array([rx,ry,0.0])
+            self.vel[i+1]  = np.array([vx,vy,0.0])
+
+        #put the MBH in the first place
+        self.mass[0] = self.mbh
+        self.pos[0]  = np.zeros(3)
+        self.vel[0]  = np.zeros(3)

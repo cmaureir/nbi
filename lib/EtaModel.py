@@ -19,7 +19,8 @@ class EtaModel(Model):
         #the numpy.random.power uses \propto a*x^(a-1)
         mbh = self.mbh
         #total mass in stars should be unity
-        mmp = 1.0/(self.N) #Equal mass stars
+        self.Nstar = self.N - 1
+        mmp = 1.0/(self.Nstar) #Equal mass stars
         self.eta = self.eta
         self.rtemp = np.arange(0.01,1.0,0.001)
         self.p = self.distribution_function(self.rtemp)
@@ -34,7 +35,7 @@ class EtaModel(Model):
 #        plt.show()
 #
 
-        self.radii = dist.random(self.N)[0]
+        self.radii = dist.random(self.Nstar)[0]
         #now I have the radii, obtain vel dispersions for each radius
         self.veldisp = np.power(self.radii,3.0-self.eta)*np.power((1.0+self.radii),1.0+self.eta)\
             *(1.0/(2.0*self.eta-4.0)-4.0/(2.0*self.eta-3.0)+3.0/(self.eta-1.0)-4.0/(2.0*self.eta-1.0)+0.5*self.eta)\
@@ -43,11 +44,21 @@ class EtaModel(Model):
             -3.0*np.power(self.radii,self.eta+1.0)*np.power(self.radii+1.0,3.0-self.eta)/(self.eta-1.0)\
             +4.0*np.power(self.radii,self.eta+2.0)*np.power(self.radii+1.0,2.0-self.eta)/(2.0*self.eta-1.0)\
             -np.power(self.radii,self.eta+3.0)*np.power(self.radii+1.0,1.0-self.eta)/(2.0*self.eta)
+        #add the terms for the central black hole changing the velocity dispersion
+        self.veldisp += mbh*(\
+            (1.0/(self.eta-4.0)-4.0/(self.eta-3.0)+6.0/(self.eta-2.0)-4.0/(self.eta-1)+1.0/self.eta)*np.power(self.radii,3.0-self.eta)*np.power(1.0+self.radii,1.0+self.eta)\
+            -np.power(self.radii,-1.0)*np.power(self.radii+1.0,5.0)/(self.eta-4.0)\
+            +4.0*np.power(self.radii+1.0,4.0)/(self.eta-3.0)-6.0*self.radii*np.power(1.0+self.radii,3.0)/(self.eta-2.0)\
+                )
         #for each star, determine three independent gaussian random variables with this sigma std
-        for i in range(self.N):
-            self.vel[i] = np.random.normal(0.0,self.veldisp[i],size=3)
-            self.pos[i] = spherical(self.radii[i])
-            self.mass[i] = mmp
+        for i in range(self.Nstar):
+            self.vel[i+1] = np.random.normal(0.0,self.veldisp[i]/(np.sqrt(3.0)),size=3)
+            self.pos[i+1] = spherical(self.radii[i])
+            self.mass[i+1] = mmp
+        #put the MBH in the first place
+        self.pos[0] = np.zeros(3)
+        self.vel[0] = np.zeros(3)
+        self.mass[0] = self.mbh
 
         return
 
