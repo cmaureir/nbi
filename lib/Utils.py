@@ -1,7 +1,7 @@
+from lib.constants import *
 import numpy as np
 import random
 import logging
-
 
 def print_model(pos, vel, mass, outfile):
 
@@ -98,6 +98,77 @@ def adjust_units(pos, vel, N, ekin, epot):
     for i in range(N):
         pos[i] *= alpha
         vel[i] /= np.sqrt(beta)
+
+def read_input_file(filename):
+    global CONV_M, CONV_X, CONV_V
+    f = open(filename)
+    m  = 0
+    rx = 0
+    ry = 0
+    rz = 0
+    vx = 0
+    vy = 0
+    vz = 0
+
+    mass = []
+    pos  = []
+    vel  = []
+
+    for line in f.readlines():
+        if "#" in line: continue
+        m, rx, ry, rz, vx, vy, vz = [float(i) for i in line.split()]
+        mass.append(m/CONV_M)
+        pos.append(np.array([rx, ry, rz])/CONV_X)
+        vel.append(np.array([vx, vy, vz])/CONV_V)
+
+    return mass, pos, vel
+
+
+def convert_to_nbody_units(pos, vel, mass, N):
+    global CONV_M, CONV_X, CONV_V, CONV_E
+
+    c_m = 0.0
+    c_r = 0.0
+    c_v = 0.0
+    c_v_ = np.zeros(3)
+
+    for i in range(N):
+        c_m += mass[i]
+    for i in range(N):
+        mass[i] /= c_m
+
+
+    epot = 0
+    for i in range(N):
+        t_epot = 0
+        for j in range(N):
+
+            if i != j:
+                r       = pos[j] - pos[i]
+                rinv    = 1 / np.linalg.norm(r)
+                t_epot -= (mass[i] * mass[j]) * rinv
+
+        epot += 0.5 * t_epot
+
+    c_r = -0.5/epot
+    c_v = np.sqrt(c_m/c_r)
+
+    for i in range(N):
+        pos[i] /= c_r
+        vel[i] /= c_v
+        c_v_ += vel[i]*mass[i]
+
+    for i in range(N):
+        vel[i] -= c_v_
+
+    epot, ekin = get_energy(pos, vel, mass, N)
+
+    #print "### 1 nbody unit = %e pc\n"    % (CONV_X * c_r)
+    #print "### 1 nbody unit = %e M_sun\n" % (CONV_M * c_m)
+    #print "### 1 nbody unit = %e yr\n"    % (CONV_T * np.sqrt(c_r**3/c_m))
+    #print "### 1 yr = %e nbody units\n"   % (1.0 / CONV_T / np.sqrt(c_r**3/c_m))
+    for i in range(N):
+        print mass[i], " ".join(map(str, pos[i])), " ".join(map(str, vel[i]))
 
 def confirm_orbits(nmp,mps,mu):
     eccs  = np.zeros(nmp)
