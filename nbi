@@ -20,18 +20,26 @@ def main():
     op = OptionsParser()
     op = op.get_args()
 
-    if op.command == "disc":
-        mps = DiscModel(op)
-    elif op.command == "iso":
-        mps = IsoModel(op)
-    elif op.command == "eta":
-        mps = EtaModel(op)
-    elif op.command == "plummer":
-        mps = PlummerModel(op)
+    if op.command == "convert":
+        mass, pos, vel = read_input_file(op.filename)
+        N = len(mass)
+        assert(N == len(pos))
+        assert(N == len(vel))
+        convert_to_nbody_units(pos, vel, mass, N)
 
-    mps.create_model()
+    else:
+        if op.command == "disc":
+            mps = DiscModel(op)
+        elif op.command == "iso":
+            mps = IsoModel(op)
+        elif op.command == "eta":
+            mps = EtaModel(op)
+        elif op.command == "plummer":
+            mps = PlummerModel(op)
 
-    print_model(mps.pos, mps.vel, mps.mass, op.outfile)
+        mps.create_model()
+
+        print_model(mps.pos, mps.vel, mps.mass, op.outfile)
 
 if __name__ == "__main__":
     main()
