@@ -14,6 +14,11 @@ class OptionsParser:
         self.general_group = self.parser.add_argument_group("General options")
         self.add_general_arguments()
 
+        # Convert Parser
+        self.convert_parser = subparsers.add_parser("convert",
+                                                 help="Convert to N-body units")
+        self.add_convert_arguments()
+
         # Disc Parser
         self.disc_parser = subparsers.add_parser("disc",
                                                  help="Disc Model")
@@ -34,6 +39,13 @@ class OptionsParser:
                                                     help="Plummer Model")
         self.add_plummer_arguments()
 
+    def add_convert_arguments(self):
+        file_help = "Filename"
+        self.convert_parser.add_argument("-f",
+                                 dest     = "filename",
+                                 type     = str,
+                                 help     = file_help,
+                                 required = False)
 
     def add_general_arguments(self):
         n_help = "Number of stars"
@@ -41,7 +53,7 @@ class OptionsParser:
                                  dest     = "n",
                                  type     = int,
                                  help     = n_help,
-                                 required = True)
+                                 required = False)
 
         out_help = "Name of output ascii file"
         self.general_group.add_argument("-o",
