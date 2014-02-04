@@ -10,6 +10,7 @@ class IsoModel(Model):
         self.delta = op.delta
         self.mbh  = op.mbh
         self.mmp  = op.mmp
+        self.ulim = op.ulim
 
     def get_pos_vel(self, a, b, m_anom, e, m):
 
@@ -62,6 +63,8 @@ class IsoModel(Model):
 
         radii_temp = np.random.power(2.0-self.delta,self.Nstar)
         radii      = np.sort(radii_temp)
+        #rescale to outer limit
+        radii *= self.ulim
 
         for i in range(self.Nstar):
             b = radii[i] * np.sqrt(np.fabs(1 - eccs[i]**2)) * PC_in_m
@@ -76,13 +79,14 @@ class IsoModel(Model):
             m_anomaly = random.random()*2.0*np.pi
 
             m, r, v = self.get_pos_vel(a_vec, b_vec, m_anomaly, eccs[i], self.mbh*Msun)
+
             #this will write everything in PC, velocity in pc per year and mass in Msun, bhint units
             self.mass[i+1] = self.mmp
             self.pos[i+1]  = r/PC_in_m
-            self.vel[i+1]  = v[0]/9.78e8
+            self.vel[i+1]  = v/9.78e8
 
         #put the MBH in the first place
-        self.mass[0] = mbh
+        self.mass[0] = self.mbh
         self.pos[0]  = np.zeros(3)
         self.vel[0]  = np.zeros(3)
 

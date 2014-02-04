@@ -130,6 +130,14 @@ class OptionsParser:
                                  required = True)
 
     def add_iso_arguments(self):
+        ulim_help = "Outer radius for iso distribution [pc]"
+        self.iso_parser.add_argument("-u",
+                                 dest     = "ulim",
+                                 type     = float,
+                                 help     = ulim_help,
+                                 required = True)
+
+
         gamma_help =  textwrap.dedent("""\
                       Power law index gamma of eccentricity distribution,
                       default = 1.0 (thermalized)""")
