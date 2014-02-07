@@ -61,10 +61,11 @@ class IsoModel(Model):
         self.Nstar = self.N - 1
         eccs = np.random.power(self.gamma+1.0,self.Nstar)
 
-        radii_temp = np.random.power(2.0-self.delta,self.Nstar)
+        radii_temp = np.random.power(3.0-self.delta,self.Nstar)
         radii      = np.sort(radii_temp)
         #rescale to outer limit
         radii *= self.ulim
+        self.radii = radii
 
         for i in range(self.Nstar):
             b = radii[i] * np.sqrt(np.fabs(1 - eccs[i]**2)) * PC_in_m

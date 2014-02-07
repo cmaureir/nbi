@@ -68,11 +68,11 @@ class OptionsParser:
         #                         help    = profile_help,
         #                         default = None)
 
-        #plot_help = "plot histogram of density"
-        #self.disc_parser.add_argument("--plot",
-        #                         dest   = "plot",
-        #                         help   = plot_help,
-        #                         action = "store_true")
+        plot_help = "plot histogram of density"
+        self.general_group.add_argument("--plot",
+                                 dest   = "plot",
+                                 help   = plot_help,
+                                 action = "store_true")
 
     def add_disc_arguments(self):
 

@@ -2,6 +2,13 @@ from lib.constants import *
 import numpy as np
 import random
 import logging
+import matplotlib.pyplot as plt
+
+def plot_radial_profile(radii):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.hist(radii,50)
+    plt.show()
 
 def print_model(pos, vel, mass, outfile):
 
