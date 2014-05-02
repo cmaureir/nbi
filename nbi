@@ -37,9 +37,14 @@ def main():
         elif op.command == "plummer":
             mps = PlummerModel(op)
 
+
         mps.create_model()
 
         print_model(mps.pos, mps.vel, mps.mass, op.outfile)
+
+        if op.plot and op.command == "iso":
+            plot_radial_profile(mps.radii)
+
 
 if __name__ == "__main__":
     main()

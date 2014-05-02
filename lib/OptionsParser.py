@@ -68,11 +68,11 @@ class OptionsParser:
         #                         help    = profile_help,
         #                         default = None)
 
-        #plot_help = "plot histogram of density"
-        #self.disc_parser.add_argument("--plot",
-        #                         dest   = "plot",
-        #                         help   = plot_help,
-        #                         action = "store_true")
+        plot_help = "plot histogram of density"
+        self.general_group.add_argument("--plot",
+                                 dest   = "plot",
+                                 help   = plot_help,
+                                 action = "store_true")
 
     def add_disc_arguments(self):
 
@@ -130,6 +130,14 @@ class OptionsParser:
                                  required = True)
 
     def add_iso_arguments(self):
+        ulim_help = "Outer radius for iso distribution [pc]"
+        self.iso_parser.add_argument("-u",
+                                 dest     = "ulim",
+                                 type     = float,
+                                 help     = ulim_help,
+                                 required = True)
+
+
         gamma_help =  textwrap.dedent("""\
                       Power law index gamma of eccentricity distribution,
                       default = 1.0 (thermalized)""")
