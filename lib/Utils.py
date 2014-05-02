@@ -140,9 +140,7 @@ def convert_to_nbody_units(pos, vel, mass, N):
     c_v_ = np.zeros(3)
 
     c_m = sum(mass)
-    for i in range(N):
-        mass[i] /= c_m
-
+    mass = [float(i)/c_m for i in mass]
 
     epot = 0
     for i in range(N):
