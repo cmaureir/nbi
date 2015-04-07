@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from Utils import *
+from lib.Utils import *
 
 class PlummerModel:
     def __init__(self, op):
